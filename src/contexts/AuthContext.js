@@ -15,8 +15,8 @@ export function AuthProvider({ children }) {
     function signup(username, email, password) {
         const collectionRef = firestore.collection('users');
         const createdAt = new Date().getTime();
-            collectionRef.add({ username, email, createdAt })
-
+            collectionRef.add({ username, email, createdAt });
+            
         return auth.createUserWithEmailAndPassword(email, password);
     }
 
@@ -39,20 +39,16 @@ export function AuthProvider({ children }) {
     }, []);
 
     function getUsername(user) {
-        const email = user.email;
-        firestore.collection("users")
-        .where("email", '==', email)
-        .orderBy('createdAt', 'desc')
-        .limit(1)
-        .onSnapshot((snap) => {
-            let document = {};
+        const email = user.email ;
 
-            snap.forEach(doc => {
-                document = { ...doc.data(), id: doc.id };
+        firestore.collection("users").where("email", '==', email).limit(1)
+            .onSnapshot((snap) => {
+                let document = {};
+                snap.forEach(doc => {
+                    document = { ...doc.data(), id: doc.id };
+                });                    
+                setCurrentUserInfo(document);
             });
-            
-            setCurrentUserInfo(document);
-        });
     }
     
     const value = {

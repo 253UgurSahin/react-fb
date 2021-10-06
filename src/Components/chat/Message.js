@@ -7,19 +7,23 @@ export default function Message() {
     const { chatroom } = useParams();
     const [allMessages, setAllMessages] = useState([]);
     const { currentUserInfo } = useAuth();
-    
+
     useEffect(() => {
-        const unsub = firestore.collection('messages')
-            .where('roomid', '==', chatroom)
-            .orderBy('createdAt', 'desc')
-            .onSnapshot((snap) => {
-                let documents = [];
-                snap.forEach(doc => {
-                    documents.push({ ...doc.data(), id: doc.id });
-                });                
-                setAllMessages(documents);
-            });
-        return () => unsub();
+        if (chatroom) {
+            const unsub = firestore.collection('messages')
+                .where('roomid', '==', chatroom)
+                .orderBy('createdAt', 'desc')
+                .onSnapshot((snap) => {
+                    let documents = [];
+                    snap.forEach(doc => {
+                        documents.push({ ...doc.data(), id: doc.id });
+                    });                
+                    setAllMessages(documents);
+                });
+
+        
+            return () => unsub();
+        }
     }, [chatroom]);
 
     function theDate(t) {
@@ -49,7 +53,7 @@ export default function Message() {
                             <div className={`flex flex-col space-y-2 text-md max-w-xs mx-2 ${currentUserInfo.id === mes.creator ? "order-1 items-end" : "order-2 items-start"}`}>
                                 <div><span className={`px-4 py-2 rounded-lg inline-block ${currentUserInfo.id === mes.creator ? "rounded-br-none bg-blue-600 text-white" : "rounded-bl-none bg-gray-300 text-gray-600"}`}>{mes.message}</span></div>
                             </div>
-                            <span className="text-xs">{ theDate(mes.createdAt) }</span>
+                            <span className={`text-xs ${currentUserInfo.id === mes.creator ? "" : "order-2"}`}>{ theDate(mes.createdAt) }</span>
                         </div>
                     </div>
                 ))
