@@ -19,6 +19,7 @@ export default function Message() {
                         documents.push({ ...doc.data(), id: doc.id });
                     });                
                     setAllMessages(documents);
+                    console.log(documents);
                 });
 
         

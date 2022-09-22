@@ -39,6 +39,7 @@ export function AuthProvider({ children }) {
     }, []);
 
     function getUsername(user) {
+        if (!user) return setCurrentUserInfo("");
         const email = user.email ;
 
         firestore.collection("users").where("email", '==', email).limit(1)

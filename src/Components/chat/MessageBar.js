@@ -8,8 +8,6 @@ export default function MessageBar({ room }) {
     const { currentUserInfo } = useAuth();
     const messageRef = useRef();
 
-    console.table(currentUserInfo);
-
     function sendMessage(e) {
         e.preventDefault();
         setLoading(true);
